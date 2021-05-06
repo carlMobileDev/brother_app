@@ -10,7 +10,7 @@ part of 'db.dart';
 class ProductData extends DataClass implements Insertable<ProductData> {
   final int id;
   final String name;
-  final String? image;
+  final String image;
   final String? barcode;
   final int? parentId;
   final int? inventoryAmount;
@@ -18,7 +18,7 @@ class ProductData extends DataClass implements Insertable<ProductData> {
   ProductData(
       {required this.id,
       required this.name,
-      this.image,
+      required this.image,
       this.barcode,
       this.parentId,
       this.inventoryAmount,
@@ -33,7 +33,7 @@ class ProductData extends DataClass implements Insertable<ProductData> {
       id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
       image:
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}image']),
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}image'])!,
       barcode:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}barcode']),
       parentId:
@@ -49,9 +49,7 @@ class ProductData extends DataClass implements Insertable<ProductData> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
-    if (!nullToAbsent || image != null) {
-      map['image'] = Variable<String?>(image);
-    }
+    map['image'] = Variable<String>(image);
     if (!nullToAbsent || barcode != null) {
       map['barcode'] = Variable<String?>(barcode);
     }
@@ -71,8 +69,7 @@ class ProductData extends DataClass implements Insertable<ProductData> {
     return ProductCompanion(
       id: Value(id),
       name: Value(name),
-      image:
-          image == null && nullToAbsent ? const Value.absent() : Value(image),
+      image: Value(image),
       barcode: barcode == null && nullToAbsent
           ? const Value.absent()
           : Value(barcode),
@@ -93,7 +90,7 @@ class ProductData extends DataClass implements Insertable<ProductData> {
     return ProductData(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
-      image: serializer.fromJson<String?>(json['image']),
+      image: serializer.fromJson<String>(json['image']),
       barcode: serializer.fromJson<String?>(json['barcode']),
       parentId: serializer.fromJson<int?>(json['parentId']),
       inventoryAmount: serializer.fromJson<int?>(json['inventoryAmount']),
@@ -106,7 +103,7 @@ class ProductData extends DataClass implements Insertable<ProductData> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
-      'image': serializer.toJson<String?>(image),
+      'image': serializer.toJson<String>(image),
       'barcode': serializer.toJson<String?>(barcode),
       'parentId': serializer.toJson<int?>(parentId),
       'inventoryAmount': serializer.toJson<int?>(inventoryAmount),
@@ -172,7 +169,7 @@ class ProductData extends DataClass implements Insertable<ProductData> {
 class ProductCompanion extends UpdateCompanion<ProductData> {
   final Value<int> id;
   final Value<String> name;
-  final Value<String?> image;
+  final Value<String> image;
   final Value<String?> barcode;
   final Value<int?> parentId;
   final Value<int?> inventoryAmount;
@@ -189,16 +186,17 @@ class ProductCompanion extends UpdateCompanion<ProductData> {
   ProductCompanion.insert({
     this.id = const Value.absent(),
     required String name,
-    this.image = const Value.absent(),
+    required String image,
     this.barcode = const Value.absent(),
     this.parentId = const Value.absent(),
     this.inventoryAmount = const Value.absent(),
     this.price = const Value.absent(),
-  }) : name = Value(name);
+  })  : name = Value(name),
+        image = Value(image);
   static Insertable<ProductData> custom({
     Expression<int>? id,
     Expression<String>? name,
-    Expression<String?>? image,
+    Expression<String>? image,
     Expression<String?>? barcode,
     Expression<int?>? parentId,
     Expression<int?>? inventoryAmount,
@@ -218,7 +216,7 @@ class ProductCompanion extends UpdateCompanion<ProductData> {
   ProductCompanion copyWith(
       {Value<int>? id,
       Value<String>? name,
-      Value<String?>? image,
+      Value<String>? image,
       Value<String?>? barcode,
       Value<int?>? parentId,
       Value<int?>? inventoryAmount,
@@ -244,7 +242,7 @@ class ProductCompanion extends UpdateCompanion<ProductData> {
       map['name'] = Variable<String>(name.value);
     }
     if (image.present) {
-      map['image'] = Variable<String?>(image.value);
+      map['image'] = Variable<String>(image.value);
     }
     if (barcode.present) {
       map['barcode'] = Variable<String?>(barcode.value);
@@ -303,7 +301,7 @@ class $ProductTable extends Product with TableInfo<$ProductTable, ProductData> {
     return GeneratedTextColumn(
       'image',
       $tableName,
-      true,
+      false,
     );
   }
 
@@ -378,6 +376,8 @@ class $ProductTable extends Product with TableInfo<$ProductTable, ProductData> {
     if (data.containsKey('image')) {
       context.handle(
           _imageMeta, image.isAcceptableOrUnknown(data['image']!, _imageMeta));
+    } else if (isInserting) {
+      context.missing(_imageMeta);
     }
     if (data.containsKey('barcode')) {
       context.handle(_barcodeMeta,

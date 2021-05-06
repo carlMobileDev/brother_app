@@ -16,7 +16,7 @@ part 'db.g.dart';
 class Product extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text().withLength(min: 3, max: 32)();
-  TextColumn get image => text().nullable()();
+  TextColumn get image => text()();
   TextColumn get barcode => text().nullable()();
   IntColumn get parentId => integer().nullable()();
   IntColumn get inventoryAmount => integer().nullable()();

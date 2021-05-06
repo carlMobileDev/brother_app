@@ -4,6 +4,7 @@ import 'package:brother_app/db/db.dart';
 import 'package:brother_app/util/custom_theme.dart';
 import 'package:brother_app/util/image_helper.dart' as imageHelper;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:moor_flutter/moor_flutter.dart' as moor;
@@ -16,12 +17,25 @@ class CreateItemPage extends StatefulWidget {
 }
 
 class _CreateItemPageState extends State<CreateItemPage> {
+  String PLACEHOLDER_IMAGE = 'assets/images/placeholder_product_image.png';
   ThemeData _themeData = myTheme();
   final _formKey = GlobalKey<FormBuilderState>();
   bool _inventoryAmountHasError = false;
   bool _priceHasError = false;
   bool _nameHasError = false;
   File? _productImage;
+  late String _placeholderImage;
+
+  void initState() {
+    super.initState();
+    loadPlaceholderImage();
+  }
+
+  void loadPlaceholderImage() async {
+    ByteData image =
+        await rootBundle.load('assets/images/placeholder_product_image.png');
+    _placeholderImage = imageHelper.base64String(image.buffer.asUint8List());
+  }
 
   void _getImage(BuildContext context, ImageSource source) async {
     PickedFile? pickedFile = await ImagePicker()
@@ -85,32 +99,29 @@ class _CreateItemPageState extends State<CreateItemPage> {
                                       )
                                     ]),
                           SizedBox(height: 35),
-                          Column(
-                            children: [
-                              FormBuilderTextField(
-                                name: 'name',
-                                decoration: InputDecoration(
-                                    labelText: 'Product Name',
-                                    prefixIcon:
-                                        Icon(Icons.drive_file_rename_outline),
-                                    suffixIcon: _nameHasError
-                                        ? Icon(Icons.error, color: Colors.red)
-                                        : Icon(Icons.check,
-                                            color: Colors.green)),
-                                onChanged: (val) {
-                                  setState(() {
-                                    _nameHasError = !(_formKey
-                                            .currentState?.fields['name']
-                                            ?.validate() ??
-                                        false);
-                                  });
-                                },
-                                validator: FormBuilderValidators.compose(
-                                    [FormBuilderValidators.required(context)]),
-                                textInputAction: TextInputAction.next,
-                              ),
-                            ],
+
+                          FormBuilderTextField(
+                            name: 'name',
+                            decoration: InputDecoration(
+                                labelText: 'Product Name',
+                                prefixIcon:
+                                    Icon(Icons.drive_file_rename_outline),
+                                suffixIcon: _nameHasError
+                                    ? Icon(Icons.error, color: Colors.red)
+                                    : Icon(Icons.check, color: Colors.green)),
+                            onChanged: (val) {
+                              setState(() {
+                                _nameHasError = !(_formKey
+                                        .currentState?.fields['name']
+                                        ?.validate() ??
+                                    false);
+                              });
+                            },
+                            validator: FormBuilderValidators.compose(
+                                [FormBuilderValidators.required(context)]),
+                            textInputAction: TextInputAction.next,
                           ),
+
                           SizedBox(height: 10),
                           FormBuilderTextField(
                             name: 'inventoryAmount',
@@ -158,17 +169,20 @@ class _CreateItemPageState extends State<CreateItemPage> {
                               FormBuilderValidators.numeric(context),
                             ]),
                             keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.next,
+                            textInputAction: TextInputAction.done,
                           ),
                           SizedBox(height: 10),
                           MaterialButton(
                               color: Colors.green,
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  String? imageString;
-                                  if (_productImage != null)
+                                  late String imageString = "";
+                                  if (_productImage == null) {
+                                    imageString = _placeholderImage;
+                                  } else {
                                     imageString = imageHelper.base64String(
                                         _productImage!.readAsBytesSync());
+                                  }
                                   print('Saving!!');
 
                                   Provider.of<MyDatabase>(context, listen: false)

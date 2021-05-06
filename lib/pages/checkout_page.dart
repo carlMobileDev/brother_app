@@ -240,6 +240,10 @@ class _BarcodeReaderState extends State<BarcodeReader> {
         appBar: new AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
+          title: Text(
+            "Checkout!",
+            style: TextStyle(color: Colors.black),
+          ),
           actions: [
             IconButton(
                 icon: const Icon(
@@ -270,7 +274,7 @@ class _BarcodeReaderState extends State<BarcodeReader> {
                     print(product.name);
                     if (!cachedImages.containsKey(product.id))
                       cachedImages.putIfAbsent(product.id,
-                          () => Image.memory(base64Decode(product.image!)));
+                          () => Image.memory(base64Decode(product.image)));
                     if (product.price != null &&
                         scannedIds[product.id] != null) {
                       double pri = totalCost;
