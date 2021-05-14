@@ -97,7 +97,7 @@ class _BarcodeReaderState extends State<BarcodeReader> {
     setState(() {});
   }
 
-  Future<void> pressScan() async {
+  Future<void> _scanBarcode() async {
     var barcode = await _getBarcode();
     if (barcode.isNotEmpty) {
       int productId = int.parse(barcode);
@@ -117,20 +117,12 @@ class _BarcodeReaderState extends State<BarcodeReader> {
           backgroundColor: Colors.green,
         ).show(context);
         Timer(Duration(seconds: 1), () {
-          if (barcode.isNotEmpty) pressScan();
+          if (barcode.isNotEmpty) _scanBarcode();
         });
       } else {
-        Flushbar(
-          title: "Failure",
-          message: "Scan Canceled or Not Found",
-          duration: Duration(seconds: 2),
-          backgroundColor: Colors.red,
-        ).show(context);
+        //Scan was canceled
       }
     }
-    //I have a Toggle in my settings screen to turn on or off continuous Scanning.
-
-    //I user a timer, which allows the Popup to Show before starting the loop.
   }
 
   Future<String> _getBarcode() async {
@@ -141,6 +133,8 @@ class _BarcodeReaderState extends State<BarcodeReader> {
     } on PlatformException catch (e) {}
     return barcodeScanResult;
   }
+
+  void _getCatalog() {}
 
   Widget makeListTile(ProductData product, int? quantity) {
     return ListTile(
@@ -252,9 +246,17 @@ class _BarcodeReaderState extends State<BarcodeReader> {
                 ),
                 onPressed: () {
                   setState(() {
-                    pressScan();
+                    _scanBarcode();
                   });
-                })
+                }),
+            IconButton(
+              icon: const Icon(Icons.folder, color: Colors.green),
+              onPressed: () {
+                setState(() {
+                  _getCatalog();
+                });
+              },
+            )
           ],
         ),
         body: FutureBuilder(
@@ -265,9 +267,15 @@ class _BarcodeReaderState extends State<BarcodeReader> {
                 double totalCost = 0;
                 List<ProductData> products = snapshot.data as List<ProductData>;
                 if (products.isEmpty) {
-                  return Center(
-                    child: Text(
-                        "Press the camera button in the top right to start scanning!"),
+                  return Column(
+                    children: [
+                      MaterialButton(
+                          child: Text("Scan Barcode"), onPressed: _scanBarcode),
+                      MaterialButton(
+                        child: Text("Checkout from catalog"),
+                        onPressed: _getCatalog,
+                      )
+                    ],
                   );
                 } else {
                   for (var product in products) {
