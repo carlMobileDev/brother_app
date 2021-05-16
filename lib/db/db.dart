@@ -61,8 +61,8 @@ class MyDatabase extends _$MyDatabase {
         entry.copyWith(barcode: Value(barcode), id: Value(productId));
 
     //TEST: Print barcode on save
-    printBarcodeData(productId.toString());
-    print("updating db and printing barcode with id: " + productId.toString());
+    // printBarcodeData(productId.toString());
+    // print("updating db and printing barcode with id: " + productId.toString());
     //printLabel(imageFromBase64String(barcode) as ui.Image);
 
     await update(product).replace(newEntry);

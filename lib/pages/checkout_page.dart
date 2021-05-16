@@ -4,6 +4,8 @@ import 'dart:math';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:brother_app/db/db.dart';
+import 'package:brother_app/providers/checkout_provider.dart';
+import 'package:brother_app/widgets/checkout_item_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -16,86 +18,86 @@ class BarcodeReader extends StatefulWidget {
 
 class _BarcodeReaderState extends State<BarcodeReader> {
   //Holds Product Ids scanned and their quantities
-  Map<int, int> scannedIds = {};
+  //Map<int, int> scannedIds = {};
   Map<int, Image> cachedImages = {};
 
-  Future<void> scanBarcodeNormal() async {
-    String barcodeScanRes;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.QR);
-      print(barcodeScanRes);
-    } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
-    }
+  // Future<void> scanBarcodeNormal() async {
+  //   String barcodeScanRes;
+  //   // Platform messages may fail, so we use a try/catch PlatformException.
+  //   try {
+  //     barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+  //         '#ff6666', 'Cancel', true, ScanMode.QR);
+  //     print(barcodeScanRes);
+  //   } on PlatformException {
+  //     barcodeScanRes = 'Failed to get platform version.';
+  //   }
+  //
+  //   // If the widget was removed from the tree while the asynchronous platform
+  //   // message was in flight, we want to discard the reply rather than calling
+  //   // setState to update our non-existent appearance.
+  //   if (!mounted) return;
+  //
+  //   setState(() {
+  //     if (barcodeScanRes != null && int.parse(barcodeScanRes) > 0) {
+  //       int productId = int.parse(barcodeScanRes);
+  //       if (scannedIds.containsKey(productId)) {
+  //         scannedIds.update(productId, (value) => value + 1);
+  //       } else {
+  //         scannedIds.putIfAbsent(productId, () => 1);
+  //       }
+  //     }
+  //   });
+  // }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      if (barcodeScanRes != null && int.parse(barcodeScanRes) > 0) {
-        int productId = int.parse(barcodeScanRes);
-        if (scannedIds.containsKey(productId)) {
-          scannedIds.update(productId, (value) => value + 1);
-        } else {
-          scannedIds.putIfAbsent(productId, () => 1);
-        }
-      }
-    });
-  }
-
-  Future<void> scanBarcodeContinuous() async {
-    String barcodeScanRes;
-    List<int> scannedProductIds = [];
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      FlutterBarcodeScanner.getBarcodeStreamReceiver(
-        "#ff6666",
-        "Done",
-        false,
-        ScanMode.QR,
-      )?.listen((barcode) async {
-        if (barcode != null && int.parse(barcode) > 0) {
-          int productId = int.parse(barcode);
-
-          //Got a barcode
-
-          // ProductData product = ProductData.fromJson(json.decode(barcode));
-          // products.add(product);
-          print("Scanned!");
-          //scannedProductIds.add(productId);
-          HapticFeedback.heavyImpact();
-          Flushbar(
-            title: "Success",
-            message: "Added to Checkout",
-            duration: Duration(seconds: 2),
-            backgroundColor: Colors.green,
-          ).show(context);
-
-          if (scannedIds.containsKey(productId)) {
-            scannedIds.update(productId, (value) => value + 1);
-          } else {
-            scannedIds.putIfAbsent(productId, () => 1);
-          }
-        }
-      }
-
-          /// barcode to be used
-          );
-    } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {});
-  }
+  // Future<void> scanBarcodeContinuous() async {
+  //   String barcodeScanRes;
+  //   List<int> scannedProductIds = [];
+  //   // Platform messages may fail, so we use a try/catch PlatformException.
+  //   try {
+  //     FlutterBarcodeScanner.getBarcodeStreamReceiver(
+  //       "#ff6666",
+  //       "Done",
+  //       false,
+  //       ScanMode.QR,
+  //     )?.listen((barcode) async {
+  //       if (barcode != null && int.parse(barcode) > 0) {
+  //         int productId = int.parse(barcode);
+  //
+  //         //Got a barcode
+  //
+  //         // ProductData product = ProductData.fromJson(json.decode(barcode));
+  //         // products.add(product);
+  //         print("Scanned!");
+  //         //scannedProductIds.add(productId);
+  //         HapticFeedback.heavyImpact();
+  //         Flushbar(
+  //           title: "Success",
+  //           message: "Added to Checkout",
+  //           duration: Duration(seconds: 2),
+  //           backgroundColor: Colors.green,
+  //         ).show(context);
+  //
+  //         if (scannedIds.containsKey(productId)) {
+  //           scannedIds.update(productId, (value) => value + 1);
+  //         } else {
+  //           scannedIds.putIfAbsent(productId, () => 1);
+  //         }
+  //       }
+  //     }
+  //
+  //         /// barcode to be used
+  //         );
+  //   } on PlatformException {
+  //     barcodeScanRes = 'Failed to get platform version.';
+  //   }
+  //
+  //   // If the widget was removed from the tree while the asynchronous platform
+  //   // message was in flight, we want to discard the reply rather than calling
+  //   // setState to update our non-existent appearance.
+  //   if (!mounted) return;
+  //
+  //   setState(() {});
+  // }
 
   Future<void> _scanBarcode() async {
     var barcode = await _getBarcode();
@@ -104,11 +106,7 @@ class _BarcodeReaderState extends State<BarcodeReader> {
 
       if (productId > 0) {
         setState(() {
-          if (scannedIds.containsKey(productId)) {
-            scannedIds.update(productId, (value) => value + 1);
-          } else {
-            scannedIds.putIfAbsent(productId, () => 1);
-          }
+          context.read<CheckoutProvider>().addScannedId(productId);
         });
         Flushbar(
           title: "Success",
@@ -153,60 +151,24 @@ class _BarcodeReaderState extends State<BarcodeReader> {
         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
       isThreeLine: true,
-      subtitle: quantity != null
-          ? Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              // mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                    flex: 5,
-                    child: MaterialButton(
-                        child: Icon(
-                          Icons.chevron_left,
-                          color: Colors.white,
-                        ),
-                        onPressed: (() {
-                          if (quantity == 1) {
-                            scannedIds.remove(product.id);
-                            Flushbar(
-                              title: "Removing Item",
-                              message: "${product.name} removed from checkout",
-                              duration: (Duration(seconds: 1)),
-                              backgroundColor: Colors.yellow,
-                              messageColor: Colors.black,
-                            ).show(context);
-                          } else {
-                            scannedIds.update(product.id, (value) => value - 1);
-                          }
-                          setState(() {});
-                        }))),
-                Expanded(
-                    flex: 3,
-                    child: Text(
-                      quantity.toString(),
-                      style: TextStyle(color: Colors.white),
-                    )),
-                Expanded(
-                    flex: 5,
-                    child: MaterialButton(
-                        child: Icon(
-                          Icons.chevron_right,
-                          color: Colors.white,
-                        ),
-                        onPressed: (() {
-                          setState(() {
-                            scannedIds.update(product.id, (value) => value + 1);
-                          });
-                        }))),
-              ],
-            )
-          : Container(),
+      subtitle: Text(Provider.of<CheckoutProvider>(context)
+          .scannedIds[product.id]
+          .toString()),
       trailing: quantity != null
           ? Text(
               "\$${roundToDecimals(product.price! * quantity, 2).toStringAsFixed(2)}",
               style: TextStyle(color: Colors.white),
             )
           : Text(""),
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return CheckoutItemDialog(
+                productId: product.id,
+              );
+            });
+      },
     );
   }
 
@@ -229,6 +191,8 @@ class _BarcodeReaderState extends State<BarcodeReader> {
 
   @override
   Widget build(BuildContext context) {
+    Map<int, int> scannedIds = context.watch<CheckoutProvider>().scannedIds;
+    print("rebuilding");
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: new AppBar(

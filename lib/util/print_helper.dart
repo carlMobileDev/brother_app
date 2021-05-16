@@ -47,6 +47,9 @@ void printLabel(ui.Image image) async {
 }
 
 //TODO: JUST USE barcode_image library thing I imported. That is what it's for...
+
+//Takes the data to encode in the barcode (typically product.id)
+// and prints it via the brother sdk
 Future<void> printBarcodeData(String data) async {
   final image.Image newImage =
       image.Image(DEFAULT_BARCODE_WIDTH, DEFAULT_BARCODE_HEIGHT);

@@ -22,9 +22,10 @@ class _ManageInventoryPageState extends State<ManageInventoryPage> {
         body: Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 16, 8, 0),
             child: CatalogGridview(
-              onClick: () {
-                print("Item clicked!");
-              },
-            )));
+                // onClick: (ProductData p) {
+                //   printBarcodeData(p.id.toString());
+                //   print("Item clicked!");
+                // },
+                )));
   }
 }

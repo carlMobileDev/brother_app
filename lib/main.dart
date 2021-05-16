@@ -2,7 +2,7 @@ import 'package:brother_app/db/db.dart';
 import 'package:brother_app/pages/checkout_page.dart';
 import 'package:brother_app/pages/create_item_page.dart';
 import 'package:brother_app/pages/manage_inventory_page.dart';
-import 'package:brother_app/providers/base_provider.dart';
+import 'package:brother_app/providers/checkout_provider.dart';
 import 'package:brother_app/util/custom_theme.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => BaseProvider()),
+    ChangeNotifierProvider(create: (_) => CheckoutProvider()),
     Provider<MyDatabase>(
       create: (context) => MyDatabase(),
       dispose: (context, db) => db.close(),
