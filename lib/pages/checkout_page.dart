@@ -21,84 +21,6 @@ class _BarcodeReaderState extends State<BarcodeReader> {
   //Map<int, int> scannedIds = {};
   Map<int, Image> cachedImages = {};
 
-  // Future<void> scanBarcodeNormal() async {
-  //   String barcodeScanRes;
-  //   // Platform messages may fail, so we use a try/catch PlatformException.
-  //   try {
-  //     barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-  //         '#ff6666', 'Cancel', true, ScanMode.QR);
-  //     print(barcodeScanRes);
-  //   } on PlatformException {
-  //     barcodeScanRes = 'Failed to get platform version.';
-  //   }
-  //
-  //   // If the widget was removed from the tree while the asynchronous platform
-  //   // message was in flight, we want to discard the reply rather than calling
-  //   // setState to update our non-existent appearance.
-  //   if (!mounted) return;
-  //
-  //   setState(() {
-  //     if (barcodeScanRes != null && int.parse(barcodeScanRes) > 0) {
-  //       int productId = int.parse(barcodeScanRes);
-  //       if (scannedIds.containsKey(productId)) {
-  //         scannedIds.update(productId, (value) => value + 1);
-  //       } else {
-  //         scannedIds.putIfAbsent(productId, () => 1);
-  //       }
-  //     }
-  //   });
-  // }
-
-  // Future<void> scanBarcodeContinuous() async {
-  //   String barcodeScanRes;
-  //   List<int> scannedProductIds = [];
-  //   // Platform messages may fail, so we use a try/catch PlatformException.
-  //   try {
-  //     FlutterBarcodeScanner.getBarcodeStreamReceiver(
-  //       "#ff6666",
-  //       "Done",
-  //       false,
-  //       ScanMode.QR,
-  //     )?.listen((barcode) async {
-  //       if (barcode != null && int.parse(barcode) > 0) {
-  //         int productId = int.parse(barcode);
-  //
-  //         //Got a barcode
-  //
-  //         // ProductData product = ProductData.fromJson(json.decode(barcode));
-  //         // products.add(product);
-  //         print("Scanned!");
-  //         //scannedProductIds.add(productId);
-  //         HapticFeedback.heavyImpact();
-  //         Flushbar(
-  //           title: "Success",
-  //           message: "Added to Checkout",
-  //           duration: Duration(seconds: 2),
-  //           backgroundColor: Colors.green,
-  //         ).show(context);
-  //
-  //         if (scannedIds.containsKey(productId)) {
-  //           scannedIds.update(productId, (value) => value + 1);
-  //         } else {
-  //           scannedIds.putIfAbsent(productId, () => 1);
-  //         }
-  //       }
-  //     }
-  //
-  //         /// barcode to be used
-  //         );
-  //   } on PlatformException {
-  //     barcodeScanRes = 'Failed to get platform version.';
-  //   }
-  //
-  //   // If the widget was removed from the tree while the asynchronous platform
-  //   // message was in flight, we want to discard the reply rather than calling
-  //   // setState to update our non-existent appearance.
-  //   if (!mounted) return;
-  //
-  //   setState(() {});
-  // }
-
   Future<void> _scanBarcode() async {
     var barcode = await _getBarcode();
     if (barcode.isNotEmpty) {
@@ -213,14 +135,14 @@ class _BarcodeReaderState extends State<BarcodeReader> {
                     _scanBarcode();
                   });
                 }),
-            IconButton(
-              icon: const Icon(Icons.folder, color: Colors.green),
-              onPressed: () {
-                setState(() {
-                  _getCatalog();
-                });
-              },
-            )
+            // IconButton(
+            //   icon: const Icon(Icons.folder, color: Colors.green),
+            //   onPressed: () {
+            //     setState(() {
+            //       _getCatalog();
+            //     });
+            //   },
+            // )
           ],
         ),
         body: FutureBuilder(
@@ -235,10 +157,10 @@ class _BarcodeReaderState extends State<BarcodeReader> {
                     children: [
                       MaterialButton(
                           child: Text("Scan Barcode"), onPressed: _scanBarcode),
-                      MaterialButton(
-                        child: Text("Checkout from catalog"),
-                        onPressed: _getCatalog,
-                      )
+                      // MaterialButton(
+                      //   child: Text("Checkout from catalog"),
+                      //   onPressed: _getCatalog,
+                      // )
                     ],
                   );
                 } else {
@@ -273,7 +195,17 @@ class _BarcodeReaderState extends State<BarcodeReader> {
                                       product, scannedIds[product.id]))),
                         SizedBox(height: 70),
                         Text(
-                            "Total \$${roundToDecimals(totalCost, 2).toStringAsFixed(2)}")
+                            "Total \$${roundToDecimals(totalCost, 2).toStringAsFixed(2)}"),
+                        MaterialButton(
+                          onPressed: () {
+                            for (var product in products) {
+                              Provider.of<MyDatabase>(context, listen: false)
+                                  .decrementInventoryAmountForProduct(
+                                      product.id, scannedIds[product.id]!);
+                            }
+                          },
+                          child: Text("Submit"),
+                        )
                       ],
                     ),
                   );

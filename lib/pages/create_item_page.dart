@@ -202,7 +202,11 @@ class _CreateItemPageState extends State<CreateItemPage> {
                                           image: moor.Value(imageString)));
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text("Item Saved!")));
-                                  _formKey.currentState?.reset();
+
+                                  setState(() {
+                                    _formKey.currentState?.reset();
+                                    _productImage = null;
+                                  });
                                 }
                               },
                               child: Text(

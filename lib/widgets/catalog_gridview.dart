@@ -43,13 +43,20 @@ class _CatalogGridviewState extends State<CatalogGridview> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<ProductData> allProducts = snapshot.data as List<ProductData>;
-            return StaggeredGridView.countBuilder(
-                crossAxisCount: 3,
-                staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
-                itemCount: allProducts.length,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                itemBuilder: (_, index) => _inventoryCard(allProducts[index]));
+            if (allProducts.isEmpty) {
+              return Center(
+                child: Text("Your inventory is empty! Add some items first!"),
+              );
+            } else {
+              return StaggeredGridView.countBuilder(
+                  crossAxisCount: 3,
+                  staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
+                  itemCount: allProducts.length,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  itemBuilder: (_, index) =>
+                      _inventoryCard(allProducts[index]));
+            }
           } else {
             return CircularProgressIndicator();
           }
@@ -77,7 +84,7 @@ class _CatalogGridviewState extends State<CatalogGridview> {
         ),
       ),
       onTap: () {
-        printBarcodeData(data.id.toString());
+        printBarcodeData(data.id.toString(), context);
         print("Item clicked!");
       },
     );

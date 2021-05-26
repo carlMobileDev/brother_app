@@ -27,17 +27,17 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: aea86cfa4646c96f3ffb1ece8f21ebe115f2c944
+      resolved-ref: "507e3a64ef6c63cb1e3281e2648b0766bf2d852d"
       url: "git://github.com/CodeMinion/another_brother.git"
     source: git
-    version: "0.0.1"
+    version: "0.0.4"
   another_flushbar:
     dependency: "direct main"
     description:
       name: another_flushbar
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.10.20"
+    version: "1.10.22"
   archive:
     dependency: transitive
     description:
@@ -114,7 +114,7 @@ packages:
       name: build_runner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.3"
   build_runner_core:
     dependency: transitive
     description:
@@ -135,7 +135,7 @@ packages:
       name: built_value
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "8.0.5"
+    version: "8.0.6"
   characters:
     dependency: transitive
     description:
@@ -205,7 +205,7 @@ packages:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   dart_style:
     dependency: transitive
     description:
@@ -240,7 +240,7 @@ packages:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.0"
+    version: "6.1.1"
   fixnum:
     dependency: transitive
     description:
@@ -273,7 +273,7 @@ packages:
       name: flutter_form_builder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.0"
+    version: "6.0.1"
   flutter_localizations:
     dependency: transitive
     description: flutter
@@ -310,6 +310,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  frontend_server_client:
+    dependency: transitive
+    description:
+      name: frontend_server_client
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   glob:
     dependency: transitive
     description:
@@ -330,7 +337,7 @@ packages:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.2"
+    version: "0.13.3"
   http_multi_server:
     dependency: transitive
     description:
@@ -358,7 +365,7 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.4"
+    version: "0.7.5+2"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -435,7 +442,7 @@ packages:
       name: moor
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.1"
+    version: "4.3.0"
   moor_flutter:
     dependency: "direct main"
     description:
@@ -449,7 +456,7 @@ packages:
       name: moor_generator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.2"
+    version: "4.3.0"
   nested:
     dependency: transitive
     description:
@@ -477,14 +484,14 @@ packages:
       name: path_drawing
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.0"
+    version: "0.5.1"
   path_parsing:
     dependency: transitive
     description:
       name: path_parsing
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.0"
+    version: "0.2.1"
   path_provider:
     dependency: "direct main"
     description:
@@ -540,7 +547,7 @@ packages:
       name: permission_handler_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.3.0"
+    version: "3.4.0"
   petitparser:
     dependency: transitive
     description:
@@ -631,7 +638,7 @@ packages:
       name: shelf
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.1"
+    version: "1.1.4"
   shelf_web_socket:
     dependency: transitive
     description:
@@ -678,21 +685,21 @@ packages:
       name: sqlite3
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   sqlite3_flutter_libs:
     dependency: "direct main"
     description:
       name: sqlite3_flutter_libs
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.1"
+    version: "0.4.2"
   sqlparser:
     dependency: transitive
     description:
       name: sqlparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.15.0"
+    version: "0.16.0"
   stack_trace:
     dependency: transitive
     description:
@@ -776,7 +783,7 @@ packages:
       name: web_socket_channel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.0"
   win32:
     dependency: transitive
     description:
