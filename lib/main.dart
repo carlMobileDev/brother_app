@@ -57,8 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
           bottomNavigationBar: FancyBottomNavigation(
             initialSelection: 1,
             tabs: _tabs,
-            circleColor: Colors.green,
-            barBackgroundColor: Colors.green,
+            circleColor: Theme.of(context).primaryColor,
+            barBackgroundColor: Theme.of(context).primaryColor,
             activeIconColor: Colors.white,
             textColor: Colors.white,
             inactiveIconColor: Colors.white,

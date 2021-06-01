@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:brother_app/db/db.dart';
+import 'package:brother_app/util/custom_theme.dart';
 import 'package:brother_app/util/print_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -67,16 +68,16 @@ class _CatalogGridviewState extends State<CatalogGridview> {
     return InkWell(
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.green[200],
-            border: Border.all(color: Colors.green),
+            color: myTheme().accentColor,
             borderRadius: BorderRadius.all(Radius.circular(8))),
         child: Column(
           children: [
             Container(
                 padding: EdgeInsets.all(8.0), child: cachedImages[data.id]!),
-            Text(data.name),
-            Text("Price: ${data.price}"),
-            Text("Amount: ${data.inventoryAmount}"),
+            Text(data.name, style: TextStyle(color: Colors.white)),
+            Text("Price: ${data.price}", style: TextStyle(color: Colors.white)),
+            Text("Amount: ${data.inventoryAmount}",
+                style: TextStyle(color: Colors.white)),
             SizedBox(
               height: 8,
             )

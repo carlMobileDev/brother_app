@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:brother_app/db/db.dart';
 import 'package:brother_app/providers/checkout_provider.dart';
+import 'package:brother_app/util/custom_theme.dart';
 import 'package:brother_app/widgets/checkout_item_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,7 +35,7 @@ class _BarcodeReaderState extends State<BarcodeReader> {
           title: "Success",
           message: "Scan another Item!",
           duration: (Duration(seconds: 1)),
-          backgroundColor: Colors.green,
+          backgroundColor: myTheme().accentColor,
         ).show(context);
         Timer(Duration(seconds: 1), () {
           if (barcode.isNotEmpty) _scanBarcode();
@@ -126,9 +127,9 @@ class _BarcodeReaderState extends State<BarcodeReader> {
           ),
           actions: [
             IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.camera_alt,
-                  color: Colors.green,
+                  color: myTheme().accentColor,
                 ),
                 onPressed: () {
                   setState(() {
@@ -153,15 +154,20 @@ class _BarcodeReaderState extends State<BarcodeReader> {
                 double totalCost = 0;
                 List<ProductData> products = snapshot.data as List<ProductData>;
                 if (products.isEmpty) {
-                  return Column(
-                    children: [
-                      MaterialButton(
-                          child: Text("Scan Barcode"), onPressed: _scanBarcode),
-                      // MaterialButton(
-                      //   child: Text("Checkout from catalog"),
-                      //   onPressed: _getCatalog,
-                      // )
-                    ],
+                  return Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: myTheme().accentColor,
+                          borderRadius: BorderRadius.circular(8)),
+                      child: MaterialButton(
+                          child: Text("Scan Barcode",
+                              style: TextStyle(color: Colors.white)),
+                          onPressed: _scanBarcode),
+                    ),
+                    // MaterialButton(
+                    //   child: Text("Checkout from catalog"),
+                    //   onPressed: _getCatalog,
+                    // )
                   );
                 } else {
                   for (var product in products) {
@@ -190,7 +196,7 @@ class _BarcodeReaderState extends State<BarcodeReader> {
                                   decoration: BoxDecoration(
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(15)),
-                                      color: Colors.green),
+                                      color: myTheme().primaryColor),
                                   child: makeListTile(
                                       product, scannedIds[product.id]))),
                         SizedBox(height: 70),
