@@ -209,6 +209,7 @@ class _BarcodeReaderState extends State<BarcodeReader> {
                                   .decrementInventoryAmountForProduct(
                                       product.id, scannedIds[product.id]!);
                             }
+                            scannedIds.clear();
                           },
                           child: Text("Submit"),
                         )
