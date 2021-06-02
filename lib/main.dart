@@ -41,7 +41,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _currentTab = 0;
+  int _currentTab = 1; //initialize to the Manage Inventory screen
 
   List<TabData> _tabs = [
     TabData(iconData: Icons.add, title: "New Item"),
@@ -55,10 +55,10 @@ class _MyHomePageState extends State<MyHomePage> {
       home: Scaffold(
           body: _getBody(_currentTab),
           bottomNavigationBar: FancyBottomNavigation(
-            initialSelection: 0,
+            initialSelection: 1,
             tabs: _tabs,
-            circleColor: Colors.green,
-            barBackgroundColor: Colors.green,
+            circleColor: Theme.of(context).primaryColor,
+            barBackgroundColor: Theme.of(context).primaryColor,
             activeIconColor: Colors.white,
             textColor: Colors.white,
             inactiveIconColor: Colors.white,

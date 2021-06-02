@@ -84,8 +84,10 @@ class _CreateItemPageState extends State<CreateItemPage> {
                                                 context, ImageSource.gallery);
                                           });
                                         },
-                                        child: Text("Upload from Gallery"),
-                                        color: Colors.green,
+                                        child: Text("Upload from Gallery",
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                        color: myTheme().accentColor,
                                       ),
                                       MaterialButton(
                                         onPressed: () {
@@ -94,13 +96,18 @@ class _CreateItemPageState extends State<CreateItemPage> {
                                                 ImageSource.camera);
                                           });
                                         },
-                                        child: Text("Upload new Photo"),
-                                        color: Colors.green,
+                                        child: Text("Upload new Photo",
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                        color: myTheme().accentColor,
                                       )
                                     ]),
                           SizedBox(height: 35),
 
                           FormBuilderTextField(
+                            initialValue: "",
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             name: 'name',
                             decoration: InputDecoration(
                                 labelText: 'Product Name',
@@ -111,10 +118,14 @@ class _CreateItemPageState extends State<CreateItemPage> {
                                     : Icon(Icons.check, color: Colors.green)),
                             onChanged: (val) {
                               setState(() {
-                                _nameHasError = !(_formKey
-                                        .currentState?.fields['name']
-                                        ?.validate() ??
-                                    false);
+                                if (_formKey.currentState?.fields['name']?.value
+                                        .length() >
+                                    1) {
+                                  _nameHasError = !(_formKey
+                                          .currentState?.fields['name']
+                                          ?.validate() ??
+                                      false);
+                                }
                               });
                             },
                             validator: FormBuilderValidators.compose(
@@ -173,7 +184,7 @@ class _CreateItemPageState extends State<CreateItemPage> {
                           ),
                           SizedBox(height: 10),
                           MaterialButton(
-                              color: Colors.green,
+                              color: myTheme().accentColor,
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
                                   late String imageString = "";
@@ -200,14 +211,18 @@ class _CreateItemPageState extends State<CreateItemPage> {
                                               _formKey.currentState!
                                                   .fields['price']?.value)),
                                           image: moor.Value(imageString)));
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: Text("Item Saved!"),
-                                    duration: Duration(seconds: 2),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5)),
-                                  ));
-                                  _formKey.currentState?.reset();
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title:
+                                              Text('Item added to inventory.'),
+                                        );
+                                      });
+                                  setState(() {
+                                    _formKey.currentState?.reset();
+                                    _productImage = null;
+                                  });
                                 }
                               },
                               child: Text(

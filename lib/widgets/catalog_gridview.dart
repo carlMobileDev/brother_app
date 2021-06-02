@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:brother_app/db/db.dart';
+import 'package:brother_app/util/custom_theme.dart';
 import 'package:brother_app/util/print_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -44,13 +45,20 @@ class _CatalogGridviewState extends State<CatalogGridview> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<ProductData> allProducts = snapshot.data as List<ProductData>;
-            return StaggeredGridView.countBuilder(
-                crossAxisCount: 3,
-                staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
-                itemCount: allProducts.length,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                itemBuilder: (_, index) => _inventoryCard(allProducts[index]));
+            if (allProducts.isEmpty) {
+              return Center(
+                child: Text("Your inventory is empty! Add some items first!"),
+              );
+            } else {
+              return StaggeredGridView.countBuilder(
+                  crossAxisCount: 3,
+                  staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
+                  itemCount: allProducts.length,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  itemBuilder: (_, index) =>
+                      _inventoryCard(allProducts[index]));
+            }
           } else {
             return CircularProgressIndicator();
           }
@@ -61,16 +69,16 @@ class _CatalogGridviewState extends State<CatalogGridview> {
     return InkWell(
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.green[200],
-            border: Border.all(color: Colors.green),
+            color: myTheme().accentColor,
             borderRadius: BorderRadius.all(Radius.circular(8))),
         child: Column(
           children: [
             Container(
                 padding: EdgeInsets.all(8.0), child: cachedImages[data.id]!),
-            Text(data.name),
-            Text("Price: ${data.price}"),
-            Text("Amount: ${data.inventoryAmount}"),
+            Text(data.name, style: TextStyle(color: Colors.white)),
+            Text("Price: ${data.price}", style: TextStyle(color: Colors.white)),
+            Text("Amount: ${data.inventoryAmount}",
+                style: TextStyle(color: Colors.white)),
             SizedBox(
               height: 8,
             )
@@ -114,18 +122,18 @@ class PrintAlertDialog extends StatelessWidget {
           TextButton(
               onPressed: () {
                 printBarcodeData(
-                    productId.toString(), productName, productPrice);
+                    productId.toString(), productName, productPrice, context);
                 Navigator.pop(context);
               },
               child: Text("One")),
           TextButton(
               onPressed: () {
                 printBarcodeData(
-                    productId.toString(), productName, productPrice);
+                    productId.toString(), productName, productPrice, context);
                 Navigator.pop(context);
                 new Timer.periodic(Duration(seconds: 10), (Timer t) {
                   printBarcodeData(
-                      productId.toString(), productName, productPrice);
+                      productId.toString(), productName, productPrice, context);
                   if (t.tick == 4) {
                     t.cancel();
                   }

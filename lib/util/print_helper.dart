@@ -11,7 +11,7 @@ import 'package:image/image.dart' as image;
 const int DEFAULT_BARCODE_HEIGHT = 100;
 const int DEFAULT_BARCODE_WIDTH = 200;
 
-void printLabel(ui.Image image) async {
+void printLabel(ui.Image image, BuildContext context) async {
   var printer = new Printer();
   var printInfo = PrinterInfo();
   printInfo.printerModel = Model.QL_1110NWB;
@@ -38,7 +38,19 @@ void printLabel(ui.Image image) async {
     //   ),
     // ));
     print("Could not find printer!");
-
+    AlertDialog errorDialog = AlertDialog(
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+            child: Text("Ok"))
+      ],
+      title: Text("No Printers Found!"),
+    );
+    showDialog(
+        context: context,
+        builder: (_) {
+          return errorDialog;
+        });
     return;
   }
   // Get the IP Address from the first printer found.
@@ -50,7 +62,8 @@ void printLabel(ui.Image image) async {
 
 //Takes the data to encode in the barcode (typically product.id)
 // and prints it via the brother sdk
-Future<void> printBarcodeData(String data, String name, double price) async {
+Future<void> printBarcodeData(
+    String data, String name, double price, BuildContext context) async {
   image.Image newImage =
       image.Image(DEFAULT_BARCODE_WIDTH, DEFAULT_BARCODE_HEIGHT);
   //fill with solid white.
@@ -64,7 +77,7 @@ Future<void> printBarcodeData(String data, String name, double price) async {
 
   ui.Image uiImage =
       await getUiImage(newImage, DEFAULT_BARCODE_HEIGHT, DEFAULT_BARCODE_WIDTH);
-  printLabel(uiImage);
+  printLabel(uiImage, context);
   return;
 }
 

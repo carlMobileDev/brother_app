@@ -85,4 +85,13 @@ class MyDatabase extends _$MyDatabase {
     var query = select(product)..where((t) => t.id.equals(id));
     return query.getSingle();
   }
+
+  Future decrementInventoryAmountForProduct(int id, int amount) async {
+    ProductData p = await getProductForId(id);
+    return update(product).replace(new ProductData(
+        id: p.id,
+        name: p.name,
+        inventoryAmount: p.inventoryAmount! - amount,
+        image: p.image));
+  }
 }
