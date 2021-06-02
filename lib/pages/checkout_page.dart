@@ -151,9 +151,13 @@ class _BarcodeReaderState extends State<BarcodeReader> {
         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
       isThreeLine: true,
-      subtitle: Text(Provider.of<CheckoutProvider>(context)
-          .scannedIds[product.id]
-          .toString()),
+      subtitle: Text(
+        "Quantity: " +
+            Provider.of<CheckoutProvider>(context)
+                .scannedIds[product.id]
+                .toString(),
+        style: TextStyle(fontSize: 15, color: Colors.white),
+      ),
       trailing: quantity != null
           ? Text(
               "\$${roundToDecimals(product.price! * quantity, 2).toStringAsFixed(2)}",
@@ -272,8 +276,27 @@ class _BarcodeReaderState extends State<BarcodeReader> {
                                   child: makeListTile(
                                       product, scannedIds[product.id]))),
                         SizedBox(height: 70),
-                        Text(
-                            "Total \$${roundToDecimals(totalCost, 2).toStringAsFixed(2)}")
+                        Padding(
+                          padding: const EdgeInsets.only(right: 15.0),
+                          child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: Text(
+                                "Total \$${roundToDecimals(totalCost, 2).toStringAsFixed(2)}",
+                                style: TextStyle(
+                                    fontSize: 23, fontWeight: FontWeight.bold),
+                              )),
+                        ),
+                        SizedBox(height: 20),
+                        MaterialButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            padding: EdgeInsets.all(12),
+                            color: Colors.red,
+                            child: Text("Checkout",
+                                style: TextStyle(fontSize: 23)),
+                            onPressed: () {
+                              print("initiate Checkout");
+                            })
                       ],
                     ),
                   );

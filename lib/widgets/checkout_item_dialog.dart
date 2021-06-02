@@ -1,4 +1,5 @@
 import 'package:brother_app/providers/checkout_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,12 +35,9 @@ class _CheckoutItemDialogState extends State<CheckoutItemDialog> {
         child: Stack(
           children: [
             Container(
-                padding: EdgeInsets.fromLTRB(
-                    constants.PADDING,
-                    constants.AVATAR_RADIUS + constants.PADDING,
-                    constants.PADDING,
-                    constants.PADDING),
-                margin: EdgeInsets.only(top: constants.AVATAR_RADIUS),
+                padding: EdgeInsets.fromLTRB(constants.PADDING,
+                    constants.PADDING, constants.PADDING, constants.PADDING),
+                //margin: EdgeInsets.only(top: constants.AVATAR_RADIUS),
                 decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     color: Colors.white,
@@ -53,42 +51,43 @@ class _CheckoutItemDialogState extends State<CheckoutItemDialog> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    Text(
+                      "How Many?",
+                      style:
+                          TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+                    ),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Expanded(
-                            flex: 5,
-                            child: MaterialButton(
-                                child: Icon(
-                                  Icons.chevron_left,
-                                ),
-                                onPressed: tempAmount > 0
-                                    ? (() {
-                                        context
-                                            .read<CheckoutProvider>()
-                                            .decrementTempAmount();
-                                        setState(() {});
-                                      })
-                                    : null //Disables the button
-                                )),
-                        Expanded(
-                            flex: 3,
-                            child: Text(
-                              tempAmount.toString(),
-                            )),
-                        Expanded(
-                            flex: 5,
-                            child: MaterialButton(
-                                child: Icon(
-                                  Icons.chevron_right,
-                                ),
-                                onPressed: (() {
-                                  setState(() {
+                        MaterialButton(
+                            child: Icon(
+                              Icons.chevron_left,
+                            ),
+                            onPressed: tempAmount > 0
+                                ? (() {
                                     context
                                         .read<CheckoutProvider>()
-                                        .incrementTempAmount();
-                                  });
-                                }))),
+                                        .decrementTempAmount();
+                                    setState(() {});
+                                  })
+                                : null //Disables the button
+                            ),
+                        SizedBox(height: 15),
+                        Text(
+                          tempAmount.toString(),
+                          style: TextStyle(fontSize: 23),
+                        ),
+                        MaterialButton(
+                            child: Icon(
+                              Icons.chevron_right,
+                            ),
+                            onPressed: (() {
+                              setState(() {
+                                context
+                                    .read<CheckoutProvider>()
+                                    .incrementTempAmount();
+                              });
+                            })),
                         //Arrows and value amount
                       ],
                     ),

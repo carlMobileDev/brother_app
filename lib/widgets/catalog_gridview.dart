@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:brother_app/db/db.dart';
@@ -77,9 +78,60 @@ class _CatalogGridviewState extends State<CatalogGridview> {
         ),
       ),
       onTap: () {
-        printBarcodeData(data.id.toString());
+        showDialog(
+          context: context,
+          builder: (_) => PrintAlertDialog(
+            productId: data.id,
+            productName: data.name,
+            productPrice: data.price!,
+          ),
+          barrierDismissible: true,
+        );
+        //printBarcodeData(data.id.toString());
         print("Item clicked!");
       },
     );
+  }
+}
+
+class PrintAlertDialog extends StatelessWidget {
+  final int productId;
+  final String productName;
+  final double productPrice;
+  const PrintAlertDialog(
+      {Key? key,
+      required this.productId,
+      required this.productName,
+      required this.productPrice})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+        title: Text("Print?"),
+        content: Text("How many barcodes would you like to print?"),
+        actions: [
+          TextButton(
+              onPressed: () {
+                printBarcodeData(
+                    productId.toString(), productName, productPrice);
+                Navigator.pop(context);
+              },
+              child: Text("One")),
+          TextButton(
+              onPressed: () {
+                printBarcodeData(
+                    productId.toString(), productName, productPrice);
+                Navigator.pop(context);
+                new Timer.periodic(Duration(seconds: 10), (Timer t) {
+                  printBarcodeData(
+                      productId.toString(), productName, productPrice);
+                  if (t.tick == 4) {
+                    t.cancel();
+                  }
+                });
+              },
+              child: Text("Five"))
+        ]);
   }
 }

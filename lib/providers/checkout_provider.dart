@@ -28,20 +28,9 @@ class CheckoutProvider with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   void setNewAmountForId(int productId) {
-    _scannedIds.update(productId, (value) => tempAmount);
-    _tempAmount = 1; //reset temp
+    _scannedIds.update(productId, (value) => _tempAmount);
     notifyListeners();
   }
-
-  // void decrementAmountForId(int productId, currentAmount) {
-  //   _scannedIds.update(productId, (value) => value - 1);
-  //   notifyListeners();
-  // }
-  //
-  // void incrementAmountForId(int productId) {
-  //   _scannedIds.update(productId, (value) => value + 1);
-  //   notifyListeners();
-  // }
 
   void addScannedId(int productId) {
     if (_scannedIds.containsKey(productId)) {

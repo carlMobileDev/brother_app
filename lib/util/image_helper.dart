@@ -23,6 +23,7 @@ String base64ListToString(Int64List list) {
 Future<ui.Image> getUiImage(image.Image myImage, int height, int width) async {
   image.Image resizeImage =
       image.copyResize(myImage, height: height, width: width);
+
   ui.Codec codec =
       await ui.instantiateImageCodec(image.encodePng(resizeImage) as Uint8List);
   ui.FrameInfo frameInfo = await codec.getNextFrame();

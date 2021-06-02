@@ -1,9 +1,11 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:another_brother/label_info.dart';
 import 'package:another_brother/printer_info.dart';
 import 'package:barcode_image/barcode_image.dart';
 import 'package:brother_app/util/image_helper.dart';
+import 'package:flutter/material.dart';
 import 'package:image/image.dart' as image;
 
 const int DEFAULT_BARCODE_HEIGHT = 100;
@@ -46,21 +48,41 @@ void printLabel(ui.Image image) async {
   printer.printImage(image);
 }
 
-//TODO: JUST USE barcode_image library thing I imported. That is what it's for...
-
 //Takes the data to encode in the barcode (typically product.id)
 // and prints it via the brother sdk
-Future<void> printBarcodeData(String data) async {
-  final image.Image newImage =
+Future<void> printBarcodeData(String data, String name, double price) async {
+  image.Image newImage =
       image.Image(DEFAULT_BARCODE_WIDTH, DEFAULT_BARCODE_HEIGHT);
   //fill with solid white.
   image.fill(newImage, image.getColor(255, 255, 255));
-  drawBarcode(newImage, Barcode.qrCode(), data,
-      width: DEFAULT_BARCODE_WIDTH, height: DEFAULT_BARCODE_HEIGHT);
+  drawBarcode(newImage, Barcode.qrCode(), data, width: 100, height: 50);
+  newImage = image.drawString(newImage, image.arial_14, 85, 10, name,
+      color: Colors.black.value);
+  newImage = image.drawString(newImage, image.arial_24, 85, 55,
+      "\$" + roundToDecimals(price, 2).toStringAsFixed(2),
+      color: Colors.black.value);
+
   ui.Image uiImage =
       await getUiImage(newImage, DEFAULT_BARCODE_HEIGHT, DEFAULT_BARCODE_WIDTH);
   printLabel(uiImage);
   return;
+}
+
+double roundToDecimals(double numToRound, int deciPlaces) {
+  num modPlus1 = pow(10.0, deciPlaces + 1);
+  String strMP1 = ((numToRound * modPlus1).roundToDouble() / modPlus1)
+      .toStringAsFixed(deciPlaces + 1);
+  int lastDigitStrMP1 = int.parse(strMP1.substring(strMP1.length - 1));
+
+  num mod = pow(10.0, deciPlaces);
+  String strDblValRound =
+      ((numToRound * mod).roundToDouble() / mod).toStringAsFixed(deciPlaces);
+  int lastDigitStrDVR =
+      int.parse(strDblValRound.substring(strDblValRound.length - 1));
+
+  return (lastDigitStrMP1 == 5 && lastDigitStrDVR % 2 != 0)
+      ? ((numToRound * mod).truncateToDouble() / mod)
+      : double.parse(strDblValRound);
 }
 // void captureContext(BuildContext context, GlobalKey widgetKey) async {
 //   try {
