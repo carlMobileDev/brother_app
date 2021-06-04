@@ -68,6 +68,10 @@ class MyDatabase extends _$MyDatabase {
     await update(product).replace(newEntry);
   }
 
+  void deleteItem(ProductData data) {
+    delete(product)..delete(data);
+  }
+
   Future<List<ProductData>> getAllProducts() {
     return select(product).get();
   }
@@ -91,6 +95,9 @@ class MyDatabase extends _$MyDatabase {
     return update(product).replace(new ProductData(
         id: p.id,
         name: p.name,
+        price: p.price,
+        barcode: p.barcode,
+        parentId: p.parentId,
         inventoryAmount: p.inventoryAmount! - amount,
         image: p.image));
   }

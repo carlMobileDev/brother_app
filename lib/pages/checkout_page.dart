@@ -6,6 +6,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:brother_app/db/db.dart';
 import 'package:brother_app/providers/checkout_provider.dart';
 import 'package:brother_app/util/custom_theme.dart';
+import 'package:brother_app/util/print_helper.dart';
 import 'package:brother_app/widgets/checkout_item_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -116,6 +117,18 @@ class _BarcodeReaderState extends State<BarcodeReader> {
         : double.parse(strDblValRound);
   }
 
+  void _showReceiptDialog(
+      List<ProductData> products, Map<int, int> scannedIds, double totalCost) {
+    showDialog(
+      context: context,
+      builder: (_) => PrintReceiptDialog(
+          purchasedData: products,
+          scannedIds: scannedIds,
+          totalCost: totalCost),
+      barrierDismissible: true,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Map<int, int> scannedIds = context.watch<CheckoutProvider>().scannedIds;
@@ -223,12 +236,20 @@ class _BarcodeReaderState extends State<BarcodeReader> {
                           child:
                               Text("Checkout", style: TextStyle(fontSize: 23)),
                           onPressed: () {
+                            Map<int, int> copyOfScannedIds =
+                                Map.from(scannedIds);
+                            _showReceiptDialog(
+                                products, copyOfScannedIds, totalCost);
+
                             for (var product in products) {
                               Provider.of<MyDatabase>(context, listen: false)
                                   .decrementInventoryAmountForProduct(
                                       product.id, scannedIds[product.id]!);
                             }
-                            scannedIds.clear();
+
+                            setState(() {
+                              scannedIds.clear();
+                            });
                           },
                         )
                       ],
@@ -239,5 +260,39 @@ class _BarcodeReaderState extends State<BarcodeReader> {
                 return CircularProgressIndicator();
               }
             }));
+  }
+}
+
+class PrintReceiptDialog extends StatelessWidget {
+  final List<ProductData> purchasedData;
+  final Map<int, int> scannedIds;
+  final double totalCost;
+
+  const PrintReceiptDialog(
+      {Key? key,
+      required this.purchasedData,
+      required this.scannedIds,
+      required this.totalCost})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+        title: Text("Print?"),
+        content: Text("Print a purchase receipt?"),
+        actions: [
+          TextButton(
+              onPressed: () {
+                printReceiptData(purchasedData, scannedIds,
+                    roundToDecimals(totalCost, 2).toStringAsFixed(2), context);
+                Navigator.pop(context);
+              },
+              child: Text("Print")),
+          TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("Cancel"))
+        ]);
   }
 }

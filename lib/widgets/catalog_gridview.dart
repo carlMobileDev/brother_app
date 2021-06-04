@@ -85,6 +85,30 @@ class _CatalogGridviewState extends State<CatalogGridview> {
           ],
         ),
       ),
+      onLongPress: () {
+        showDialog(
+            context: context,
+            builder: (c) => AlertDialog(
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Provider.of<MyDatabase>(context, listen: false)
+                              .deleteItem(data);
+                          Navigator.pop(c);
+                          setState(() {});
+                        },
+                        child: Text("Delete Forever")),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(c);
+                        },
+                        child: Text("Cancel"))
+                  ],
+                  title: Text("Delete Item"),
+                  content: Text("Are you sure you want to delete this item?"),
+                ),
+            barrierDismissible: true);
+      },
       onTap: () {
         showDialog(
           context: context,
@@ -95,8 +119,6 @@ class _CatalogGridviewState extends State<CatalogGridview> {
           ),
           barrierDismissible: true,
         );
-        //printBarcodeData(data.id.toString());
-        print("Item clicked!");
       },
     );
   }
